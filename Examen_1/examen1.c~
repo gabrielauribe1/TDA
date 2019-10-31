@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct def_Fourier
+{
+  double Amp, Frec, Tf, *mtime, *resolver;
+  double Harm, Mt;
+} TipoFourier;
+
+void Datos(TipoFourier *inicio);
+double ResFunc(TipoFourier inicio, double Ti);
+void Decodificar(TipoFourier inicio, double Ti);
+void Archivo(TipoFourier inicio);
+void Graficar();
+
+
+int main (int argc, char *argv[])
+{
+  TipoFourier Inicio;
+  double Ti;
+
+
+  Datos(&Inicio);
+  Inicio.mtime = (double *) malloc (sizeof(TipoFourier)*Inicio.Mt);
+  Inicio.resolver = (double *) malloc (sizeof(TipoFourier)*Inicio.Mt);
+
+  ResFunc(Inicio, Ti);
+   
+  Decodificar(Inicio, Ti);
+  Archivo(Inicio);
+  Graficar();
+
+  return 0;
+}
+
+
+void Datos(TipoFourier *inicio)//se le piden los datos al usuario
+{
+  printf("Introduzca los datos necesarios:\n");
+  printf("Amplitud:\n");
+  scanf(" %lf", &inicio->Amp);
+  printf("Frecuencia:\n");
+  scanf(" %lf", &inicio->Frec);
+  printf("Harmonico:\n");
+  scanf(" %lf", &inicio->Harm);
+  printf("Tiempo Final:\n");
+  scanf(" %lf", &inicio->Tf);
+  printf("Muster Tiempo:\n");
+  scanf(" %lf", &inicio->Mt);
+}
+
+double ResFunc(TipoFourier inicio, double Ti)//se resuelve la funcion con los valores obtenidos por el usuario
+{
+  double Resultado=0;
+  int i;
+  float pip=3.14159;
+
+  for(i=1; i<inicio.Harm; i++)
+    {
+      Resultado += (inicio.Amp/(pip*i)*(cos(pip*i)-1)*(sin(2*pip*inicio.Frec*Ti)));
+    }
+  return Resultado;
+}
+
+void Decodificar(TipoFourier inicio, double Ti)//define los valores desde el ti, recorriendo con la suma de la division del tiempo final con el muster time
+{
+  int i;
+  for(i=0; i<)
+  for(Ti=0; Ti<= inicio.Tf; Ti+=(inicio.Tf/inicio.Mt))
+    {
+      inicio.mtime[i] = Ti;
+      inicio.resolver[i] = ResFunc(inicio, Ti); 
+    }
+}
+
+
+void Archivo(TipoFourier inicio)
+{
+  int i;
+  FILE *Archivo;
+  
+  Archivo = fopen("Fourier.txt","wt");
+
+  for(i=0; i<inicio.Mt; i++)
+    {
+      fprintf(Archivo,"%lf %lf ", inicio.mtime[i], inicio.resolver[i]);
+    }
+  
+  fclose(Archivo);
+}
+
+
+void Graficar()
+{
+  int i;
+  char *AbrirGnuPlot[] = {"set title \"Serie de Fourier\"",
+			  "set ylabel \"----Señal--->\"",
+			  "set xlabel \"----Muster Time--->\"",
+			  "plot \"Fourier.txt\" with lines"
+  };
+  FILE *VentanaGnuPlot = popen ("gnuplot -persist", "w");
+  for (i=0; i<4; i++)
+    fprintf(VentanaGnuPlot, "%s \n", AbrirGnuPlot[i]);
+}
+

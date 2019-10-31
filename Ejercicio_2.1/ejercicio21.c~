@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+typedef struct Neuron
+{
+  double *w;
+  double threshold;
+  struct Neuron* next_layer[];
+}tiponeuron;
+
+typedef struct 

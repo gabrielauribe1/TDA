@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Neurona
+{
+  double *w,bw,thresh, res;
+  int *lista;
+}tipo_neurona;
+
+void And(tipo_neurona *primeraneu);
+void Or(tipo_neurona *primeraneu);
+void Not(tipo_neurona *primeraneu);
+void Xor(tipo_neurona *primeraneu);
+
+int main(void)
+{
+  int opc, peso;
+  tipo_neurona primeraneu;
+  
+  primeraneu.thresh=0.5;
+
+  printf("¿Cuantas entradas quieres en las neuronas(2)?\n");
+  scanf(" %d", &peso);
+  
+   if(peso == 2)
+    {
+      primeraneu.w = (double *) malloc (sizeof (tipo_neurona)*2);
+      primeraneu.lista = (int *) malloc (sizeof (tipo_neurona)*2);
+    }
+  else
+    {
+      printf("Error, saliendo.\n");
+      exit(0);
+    }
+    do
+    {
+      system("clear");
+      printf("Menú:\n");
+      printf("1. And\n");
+      printf("2. Or\n");
+      printf("3. Not\n");
+      printf("4. XOr\n");
+      printf("5. Exit\n");
+      printf("Elija la opción deseada\n");
+      scanf(" %d",&opc);
+      system("clear");
+      
+      switch(opc)
+	{
+	case 1:
+	  And(&primeraneu);
+	  break;
+	case 2:
+	  Or(&primeraneu);
+	  break;
+	case 3:
+	  Not(&primeraneu);
+	  break;
+	case 4:
+	  Xor(&primeraneu);
+	  break;
+	case 5:
+	  printf("Saliendo del programa\n");
+	  exit(0);
+	  break;
+	default:
+	  printf("Opción inválida\n");
+	  break;
+	}
+      printf("\nPresione cualquier tecla para regresar al menú.");
+      __fpurge(stdin);
+      getchar();
+    }while(opc < 5);
+}
+
+void And(tipo_neurona *primeraneu)
+{
+  printf("Inserte el valor de A:\n");
+  scanf(" %d",&primeraneu->lista[0]);
+  printf("Inserte el valor de B:\n");
+  scanf(" %d",&primeraneu->lista[1]);
+  
+  primeraneu->w[0] = 1;
+  primeraneu->w[1] = 1;
+  primeraneu->bw = -1;
+  
+  primeraneu->res = primeraneu->w[0]*primeraneu->lista[0] + primeraneu->w[1]*primeraneu->lista[1]+primeraneu->bw;
+  
+  if(primeraneu->res < primeraneu->thresh)
+    printf("Resultado = 0\n");
+  else
+    printf("Resultado = 1\n");
+}
+
+void Or(tipo_neurona *primeraneu)
+{
+  printf("Inserte el valor de A:\n");
+  scanf(" %d",&primeraneu->lista[0]);
+  printf("Inserte el valor de B:\n");
+  scanf(" %d",&primeraneu->lista[1]);
+
+  primeraneu->w[0] = 1;
+  primeraneu->w[1] = 1;
+  primeraneu->bw = 0;
+  
+  primeraneu->res = primeraneu->w[0]*primeraneu->lista[0] + primeraneu->w[1]*primeraneu->lista[1]+primeraneu->bw;
+  
+  if(primeraneu->res < primeraneu->thresh)
+    printf("Resultado = 0\n");
+  else
+    printf("Resultado = 1\n");
+}
+
+void Not(tipo_neurona *primeraneu)
+{
+  printf("Inserte el valor de A:\n");
+  scanf(" %d",&primeraneu->lista[0]);
+  
+  primeraneu->w[0] = -1;
+  primeraneu->w[1] = 0.75;
+  primeraneu->bw = 0;
+  
+  primeraneu->res = primeraneu->w[0]*primeraneu->lista[0] + primeraneu->bw;
+
+  if(primeraneu->res < primeraneu->thresh)
+    printf("Resultado = 0\n");
+  else
+    printf("Resultado = 1\n");
+}
+
+void Xor(tipo_neurona *primeraneu)
+{
+  printf("No se puede\n");
+}
